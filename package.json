@@ -1,0 +1,20 @@
+{
+  "name": "github-host",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "hono": "^4.6.7"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.5.22",
+    "@cloudflare/workers-types": "^4.20241022.0",
+    "@vitest/coverage-v8": "^2.1.3",
+    "happy-dom": "^15.7.4",
+    "vitest": "^2.1.3",
+    "wrangler": "^3.83.0"
+  }
+}
