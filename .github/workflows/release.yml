@@ -1,0 +1,71 @@
+name: Release Go Binaries
+
+on:
+  push:
+    tags:
+      - "v*" # 当推送 v 开头的标签时触发
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23.2"
+
+      - name: Build binaries
+        run: |
+          # Windows 版本
+          GOOS=windows GOARCH=amd64 go build -o github-hosts.windows-amd64.exe ./scripts
+          GOOS=windows GOARCH=386 go build -o github-hosts.windows-386.exe ./scripts
+
+          # macOS 版本
+          GOOS=darwin GOARCH=amd64 go build -o github-hosts.darwin-amd64 ./scripts
+          GOOS=darwin GOARCH=arm64 go build -o github-hosts.darwin-arm64 ./scripts
+
+          # Linux 版本
+          GOOS=linux GOARCH=amd64 go build -o github-hosts.linux-amd64 ./scripts
+          GOOS=linux GOARCH=386 go build -o github-hosts.linux-386 ./scripts
+          GOOS=linux GOARCH=arm64 go build -o github-hosts.linux-arm64 ./scripts
+
+          # 创建 ZIP 包（包含二进制文件）
+          zip -j github-hosts.windows-amd64.zip github-hosts.windows-amd64.exe
+          zip -j github-hosts.windows-386.zip github-hosts.windows-386.exe
+          zip -j github-hosts.darwin-amd64.zip github-hosts.darwin-amd64
+          zip -j github-hosts.darwin-arm64.zip github-hosts.darwin-arm64
+          zip -j github-hosts.linux-amd64.zip github-hosts.linux-amd64
+          zip -j github-hosts.linux-386.zip github-hosts.linux-386
+          zip -j github-hosts.linux-arm64.zip github-hosts.linux-arm64
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: true # 设置为草稿模式
+          prerelease: false
+          files: |
+            # 二进制文件
+            github-hosts.windows-amd64.exe
+            github-hosts.windows-386.exe
+            github-hosts.darwin-amd64
+            github-hosts.darwin-arm64
+            github-hosts.linux-amd64
+            github-hosts.linux-386
+            github-hosts.linux-arm64
+            # ZIP 包
+            github-hosts.windows-amd64.zip
+            github-hosts.windows-386.zip
+            github-hosts.darwin-amd64.zip
+            github-hosts.darwin-arm64.zip
+            github-hosts.linux-amd64.zip
+            github-hosts.linux-386.zip
+            github-hosts.linux-arm64.zip
+          generate_release_notes: true
