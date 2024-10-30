@@ -66,6 +66,6 @@ jobs:
             github-hosts.linux-amd64.zip
             github-hosts.linux-386.zip
             github-hosts.linux-arm64.zip
-          draft: false
+          draft: true
           prerelease: false
           generate_release_notes: true
