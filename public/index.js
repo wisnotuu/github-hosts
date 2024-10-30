@@ -58,8 +58,22 @@ function setupEventListeners() {
 }
 
 function updateBaseUrls() {
-  // 更新所有包含 ${baseUrl} 的元素
-  document.querySelectorAll('meta[property^="og:"]').forEach((meta) => {
+  // 更新所有包含 ${baseUrl} 的 meta 标签
+  document.querySelectorAll('meta[content*="${baseUrl}"]').forEach((meta) => {
+    const content = meta.getAttribute("content")
+    if (content) {
+      meta.setAttribute("content", content.replace("${baseUrl}", baseUrl))
+    }
+  })
+
+  // 更新 canonical 链接
+  const canonicalLink = document.querySelector('link[rel="canonical"]')
+  if (canonicalLink) {
+    canonicalLink.setAttribute("href", baseUrl)
+  }
+
+  // 更新 Twitter Card meta 标签
+  document.querySelectorAll('meta[name^="twitter:"]').forEach((meta) => {
     const content = meta.getAttribute("content")
     if (content && content.includes("${baseUrl}")) {
       meta.setAttribute("content", content.replace("${baseUrl}", baseUrl))
@@ -71,6 +85,19 @@ function updateBaseUrls() {
   if (switchHostsUrlElement) {
     switchHostsUrlElement.textContent = `${baseUrl}/hosts`
   }
+
+  // 更新任何其他可能包含 ${baseUrl} 的元素
+  document.querySelectorAll("*:not(script):not(style)").forEach((element) => {
+    if (
+      element.childNodes.length === 1 &&
+      element.firstChild?.nodeType === Node.TEXT_NODE
+    ) {
+      const text = element.textContent
+      if (text && text.includes("${baseUrl}")) {
+        element.textContent = text.replace("${baseUrl}", baseUrl)
+      }
+    }
+  })
 }
 
 window.addEventListener("load", () => {
