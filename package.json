@@ -4,7 +4,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "prepare": "bunx cpy-cli .dev.vars.template . --no-overwrite --rename=.dev.vars"
   },
   "dependencies": {
     "hono": "^4.6.7"
