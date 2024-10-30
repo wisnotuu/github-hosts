@@ -9,6 +9,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # 添加写入权限
 
     steps:
       - name: Checkout code
@@ -47,15 +49,9 @@ jobs:
           zip -j github-hosts.linux-arm64.zip github-hosts.linux-arm64
 
       - name: Create Release
-        id: create_release
         uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          draft: true
-          prerelease: false
           files: |
-            # 二进制文件
             github-hosts.windows-amd64.exe
             github-hosts.windows-386.exe
             github-hosts.darwin-amd64
@@ -63,7 +59,6 @@ jobs:
             github-hosts.linux-amd64
             github-hosts.linux-386
             github-hosts.linux-arm64
-            # ZIP 包
             github-hosts.windows-amd64.zip
             github-hosts.windows-386.zip
             github-hosts.darwin-amd64.zip
@@ -71,4 +66,6 @@ jobs:
             github-hosts.linux-amd64.zip
             github-hosts.linux-386.zip
             github-hosts.linux-arm64.zip
+          draft: false
+          prerelease: false
           generate_release_notes: true
