@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="public/logo.svg" width="140" height="140" alt="github-host logo">
-  <h1>github-host</h1>
+  <img src="public/logo.svg" width="140" height="140" alt="github-hosts logo">
+  <h1>github-hosts</h1>
 </div>
 
 GitHub 访问加速，解决 GitHub 访问慢的问题。使用 Cloudflare Workers 和公共 DNS API 来获取 IP 地址。
@@ -10,12 +10,12 @@ GitHub 访问加速，解决 GitHub 访问慢的问题。使用 Cloudflare Worke
 ### Windows 用户
 在管理员权限的 PowerShell 中执行：
 ```powershell
-irm https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/windows.ps1 | iex
+irm https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@main/windows.ps1 | iex
 ```
 
 ### MacOS/Linux 用户
 ```bash
-curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/unix.sh | sudo bash
+curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@main/unix.sh | sudo bash
 ```
 
 ## 其他使用方法
@@ -23,7 +23,7 @@ curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/unix.sh | sudo b
 ### 方法一：手动更新 hosts 文件
 
 1. 访问以下地址获取 hosts 内容：
-   - [https://github-host.tinsfox.com/hosts](https://github-host.tinsfox.com/hosts)
+   - [https://github-hosts.tinsfox.com/hosts](https://github-hosts.tinsfox.com/hosts)
 
 2. 复制文件内容
 3. 替换本地 hosts 文件：
@@ -40,7 +40,7 @@ curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/unix.sh | sudo b
 2. 添加规则：
    - 方案名：GitHub Hosts
    - 类型：远程
-   - URL：`https://github-host.tinsfox.com/hosts`
+   - URL：`https://github-hosts.tinsfox.com/hosts`
    - 自动更新：1 小时
 
 ## 常见问题
@@ -62,7 +62,7 @@ curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/unix.sh | sudo b
    - 如果无法访问 GitHub，可以使用以下备用地址：
      ```bash
      # jsDelivr CDN
-     curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/install.sh | sudo bash
+     curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@main/install.sh | sudo bash
      ```
 
 ## 与原项目的区别
@@ -96,7 +96,7 @@ npm run dev
 ```
 npm run deploy
 ```
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/TinsFox/github-host)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/TinsFox/github-hosts)
 
 ## 鸣谢
 

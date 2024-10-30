@@ -1,11 +1,12 @@
 {
-  "name": "github-host",
+  "name": "github-hosts",
   "version": "1.0.0",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "build": "bash scripts/build.sh"
   },
   "dependencies": {
     "hono": "^4.6.7"

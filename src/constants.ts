@@ -42,30 +42,11 @@ export const GITHUB_URLS = [
 ]
 
 export const HOSTS_TEMPLATE = `# github hosts
-# 本项目是 GitHub520 的一个分支实现，使用 Cloudflare Workers 和公共 DNS API
-# 原项目地址：https://github.com/521xueweihan/GitHub520
-# 本项目地址：https://github.com/TinsFox/github-host
-# 文档地址：https://github-host.tinsfox.com
-# 获取 hosts 文件：https://github-host.tinsfox.com/hosts
-# ================================================================
-# 使用方法：
-# 1. Windows 系统：将以下内容复制到 C:\\Windows\\System32\\drivers\\etc\\hosts
-# 2. MacOS/Linux 系统：将以下内容复制到 /etc/hosts
-# 3. 刷新 DNS 缓存：
-#    - Windows：在 CMD 中运行 ipconfig /flushdns
-#    - MacOS：在终端中运行 sudo killall -HUP mDNSResponder
-#    - Linux：在终端中运行 sudo systemd-resolve --flush-caches
-# ================================================================
-
-# 请复制我 ⬇️
+# 加速 GitHub 访问
 
 {content}
 
-# 请复制我 ⬆️
-
-# 项目开源地址：https://github.com/TinsFox/github-host
 # 数据更新时间：{updateTime}
-# github hosts End
 `
 
 export const GITHUB_API_BASE = "https://api.github.com"

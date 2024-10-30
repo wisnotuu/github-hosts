@@ -112,12 +112,12 @@ export async function storeData(
   env: Bindings,
   data: HostEntry[]
 ): Promise<void> {
-  await env.github_host.put("lastUpdated", new Date().toISOString())
+  await env.github_hosts.put("lastUpdated", new Date().toISOString())
   await updateHostsData(env, data)
 }
 export async function getHostsData(env: Bindings): Promise<HostEntry[]> {
   // 检查是否需要更新，如果上次更新时间超过 1 小时，则更新
-  const lastUpdated = (await env.github_host.get("lastUpdated", {
+  const lastUpdated = (await env.github_hosts.get("lastUpdated", {
     type: "text",
   })) as string | null
 
@@ -135,7 +135,7 @@ export async function getHostsData(env: Bindings): Promise<HostEntry[]> {
     const entries: HostEntry[] = []
 
     for (const domain of GITHUB_URLS) {
-      const data = (await env.github_host.get(
+      const data = (await env.github_hosts.get(
         domain,
         "json"
       )) as DomainData | null
@@ -167,12 +167,12 @@ export async function updateHostsData(
     if (!newEntries) {
       // 只更新检查时间
       for (const domain of GITHUB_URLS) {
-        const data = (await env.github_host.get(
+        const data = (await env.github_hosts.get(
           domain,
           "json"
         )) as DomainData | null
         if (data) {
-          await env.github_host.put(
+          await env.github_hosts.put(
             domain,
             JSON.stringify({
               ...data,
@@ -186,7 +186,7 @@ export async function updateHostsData(
 
     // 更新每个域名的数据
     const updatePromises = newEntries.map(async ([ip, domain]) => {
-      const oldData = (await env.github_host.get(
+      const oldData = (await env.github_hosts.get(
         domain,
         "json"
       )) as DomainData | null
@@ -202,7 +202,7 @@ export async function updateHostsData(
         lastChecked: currentTime,
       }
 
-      await env.github_host.put(domain, JSON.stringify(newData))
+      await env.github_hosts.put(domain, JSON.stringify(newData))
     })
 
     await Promise.all(updatePromises)
@@ -247,8 +247,8 @@ export async function getDomainData(
     }
 
     // 更新 KV 存储
-    await env.github_host.put(domain, JSON.stringify(newData))
-    await env.github_host.put("lastUpdated", currentTime)
+    await env.github_hosts.put(domain, JSON.stringify(newData))
+    await env.github_hosts.put("lastUpdated", currentTime)
     return newData
   } catch (error) {
     console.error(`Error getting data for domain ${domain}:`, error)
@@ -262,7 +262,7 @@ export async function resetHostsData(env: Bindings): Promise<HostEntry[]> {
     // 清空所有 KV 数据
     console.log("Clearing all KV data...")
     const deletePromises = GITHUB_URLS.map((domain) =>
-      env.github_host.delete(domain)
+      env.github_hosts.delete(domain)
     )
     await Promise.all(deletePromises)
     console.log("KV data cleared")
@@ -276,7 +276,7 @@ export async function resetHostsData(env: Bindings): Promise<HostEntry[]> {
     await updateHostsData(env, newEntries)
     console.log("New data stored in KV")
     const currentTime = new Date().toISOString()
-    await env.github_host.put("lastUpdated", currentTime)
+    await env.github_hosts.put("lastUpdated", currentTime)
     return newEntries
   } catch (error) {
     console.error("Error resetting hosts data:", error)
