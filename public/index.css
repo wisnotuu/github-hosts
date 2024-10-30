@@ -289,3 +289,8 @@ td:hover .try-btn {
     height: 100px;
   }
 }
+
+#hosts {
+  height: 200px;
+  overflow-y: auto;
+}
