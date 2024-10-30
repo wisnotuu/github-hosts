@@ -51,7 +51,8 @@
   <h1>github-host</h1>
 </div>
 
-这是 [GitHub520](https://github.com/521xueweihan/GitHub520) 项目的一个分支实现，使用 Cloudflare Workers 和公共 DNS API 来提供服务。
+
+GitHub 访问加速，解决 GitHub 访问慢的问题。使用 Cloudflare Workers 和公共 DNS API 来获取 IP 地址。
 
 ## 使用方法
 
@@ -164,3 +165,12 @@ npm run dev
 npm run deploy
 ```
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/TinsFox/github-host)
+
+## 鸣谢
+
+- [GitHub520](https://github.com/521xueweihan/GitHub520)
+
+
+## 许可证
+
+[MIT](./LICENSE)
