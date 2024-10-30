@@ -1,4 +1,4 @@
-import { GITHUB_URLS, HOSTS_TEMPLATE } from "../constants"
+import { DNS_PROVIDERS, GITHUB_URLS, HOSTS_TEMPLATE } from "../constants"
 import { Bindings } from "../types"
 
 export type HostEntry = [string, string]
@@ -46,43 +46,31 @@ async function retry<T>(
   }
 }
 
-export async function fetchIpFromIpaddress(
-  domain: string
+export async function fetchIPFromIPAddress(
+  domain: string,
+  providerName?: string
 ): Promise<string | null> {
-  const dnsProviders = [
-    {
-      url: (domain: string) =>
-        `https://1.1.1.1/dns-query?name=${domain}&type=A`,
-      headers: { Accept: "application/dns-json" },
-    },
-    {
-      url: (domain: string) =>
-        `https://dns.google/resolve?name=${domain}&type=A`,
-      headers: { Accept: "application/dns-json" },
-    },
-  ]
+  const provider =
+    DNS_PROVIDERS.find((p) => p.name === providerName) || DNS_PROVIDERS[0]
 
-  for (const provider of dnsProviders) {
-    try {
-      const response = await retry(() =>
-        fetch(provider.url(domain), { headers: provider.headers })
-      )
+  try {
+    const response = await retry(() =>
+      fetch(provider.url(domain), { headers: provider.headers })
+    )
 
-      if (!response.ok) continue
+    if (!response.ok) return null
 
-      const data = (await response.json()) as DnsResponse
+    const data = (await response.json()) as DnsResponse
 
-      // 查找类型为 1 (A记录) 的答案
-      const aRecord = data.Answer?.find((answer) => answer.type === 1)
-      const ip = aRecord?.data
+    // 查找类型为 1 (A记录) 的答案
+    const aRecord = data.Answer?.find((answer) => answer.type === 1)
+    const ip = aRecord?.data
 
-      if (ip && /^\d+\.\d+\.\d+\.\d+$/.test(ip)) {
-        return ip
-      }
-    } catch (error) {
-      console.error(`Error with DNS provider:`, error)
-      continue
+    if (ip && /^\d+\.\d+\.\d+\.\d+$/.test(ip)) {
+      return ip
     }
+  } catch (error) {
+    console.error(`Error with DNS provider:`, error)
   }
 
   return null
@@ -102,7 +90,7 @@ export async function fetchLatestHostsData(): Promise<HostEntry[]> {
     const batch = GITHUB_URLS.slice(i, i + batchSize)
     const batchResults = await Promise.all(
       batch.map(async (domain) => {
-        const ip = await fetchIpFromIpaddress(domain)
+        const ip = await fetchIPFromIPAddress(domain)
         console.log(`Domain: ${domain}, IP: ${ip}`)
         return ip ? ([ip, domain] as HostEntry) : null
       })
@@ -120,17 +108,26 @@ export async function fetchLatestHostsData(): Promise<HostEntry[]> {
   console.log(`Total entries found: ${entries.length}`)
   return entries
 }
-
+export async function storeData(
+  env: Bindings,
+  data: HostEntry[]
+): Promise<void> {
+  await env.github_host.put("lastUpdated", new Date().toISOString())
+  await updateHostsData(env, data)
+}
 export async function getHostsData(env: Bindings): Promise<HostEntry[]> {
   // 检查是否需要更新，如果上次更新时间超过 1 小时，则更新
   const lastUpdated = (await env.github_host.get("lastUpdated", {
     type: "text",
   })) as string | null
+
   if (
     lastUpdated &&
     new Date(lastUpdated).getTime() + 1000 * 60 * 60 < Date.now()
   ) {
-    return await resetHostsData(env)
+    const newEntries = await fetchLatestHostsData()
+    await storeData(env, newEntries)
+    return newEntries
   }
 
   try {
@@ -146,14 +143,10 @@ export async function getHostsData(env: Bindings): Promise<HostEntry[]> {
         entries.push([data.ip, domain])
       }
     }
-
-    console.log("KV data entries:", entries)
-
     // 如果没有数据，获取新数据并存储
     if (entries.length === 0) {
       const newEntries = await fetchLatestHostsData()
-      console.log("Fetched new entries:", newEntries)
-      await updateHostsData(env, newEntries)
+      await storeData(env, newEntries)
       return newEntries
     }
 
@@ -236,12 +229,12 @@ export function formatHostsFile(entries: HostEntry[]): string {
 
 // 修改：获取单个域名数据的方法，直接从爬虫获取实时数据
 export async function getDomainData(
-  env: { github_host: KVNamespace },
+  env: Bindings,
   domain: string
 ): Promise<DomainData | null> {
   try {
     // 直接从爬虫获取最新数据
-    const ip = await fetchIpFromIpaddress(domain)
+    const ip = await fetchIPFromIPAddress(domain)
     if (!ip) {
       return null
     }
@@ -282,7 +275,8 @@ export async function resetHostsData(env: Bindings): Promise<HostEntry[]> {
     // 存储新数据
     await updateHostsData(env, newEntries)
     console.log("New data stored in KV")
-
+    const currentTime = new Date().toISOString()
+    await env.github_host.put("lastUpdated", currentTime)
     return newEntries
   } catch (error) {
     console.error("Error resetting hosts data:", error)

@@ -10,36 +10,30 @@ import { Bindings } from "./types"
 
 const app = new Hono<{ Bindings: Bindings }>()
 
-// Welcome page
 app.get("/", async (c) => {
   const baseUrl = c.req.url.replace(/\/$/, "")
 
-  // 读取 HTML 模板
   const htmlTemplate = await c.env.ASSETS.get("index.html")
   if (!htmlTemplate) {
     return c.text("Template not found", 404)
   }
 
-  // 替换模板中的变量
   const html = htmlTemplate.replace(/\${baseUrl}/g, baseUrl)
 
   return c.html(html)
 })
 
-// JSON endpoint
 app.get("/hosts.json", async (c) => {
   const data = await getHostsData(c.env)
   return c.json(data)
 })
 
-// Text hosts file endpoint
 app.get("/hosts", async (c) => {
   const data = await getHostsData(c.env)
   const hostsContent = formatHostsFile(data)
   return c.text(hostsContent)
 })
 
-// Reset endpoint
 app.post("/reset", async (c) => {
   const apiKey = c.req.query("key")
 
@@ -57,7 +51,6 @@ app.post("/reset", async (c) => {
   })
 })
 
-// 新增：查询单个域名的 IP 接口
 app.get("/:domain", async (c) => {
   const domain = c.req.param("domain")
   const data = await getDomainData(c.env, domain)

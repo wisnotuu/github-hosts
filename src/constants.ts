@@ -71,3 +71,16 @@ export const HOSTS_TEMPLATE = `# github hosts
 export const GITHUB_API_BASE = "https://api.github.com"
 
 export const HOSTS_PATH = "hosts"
+
+export const DNS_PROVIDERS = [
+  {
+    url: (domain: string) => `https://1.1.1.1/dns-query?name=${domain}&type=A`,
+    headers: { Accept: "application/dns-json" },
+    name: "Cloudflare DNS",
+  },
+  {
+    url: (domain: string) => `https://dns.google/resolve?name=${domain}&type=A`,
+    headers: { Accept: "application/dns-json" },
+    name: "Google DNS",
+  },
+]
