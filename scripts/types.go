@@ -33,6 +33,18 @@ const (
 	ERROR
 )
 
+const (
+	MaxMenuOption = 12 // Maximum menu option number
+)
+
+// displayOption 定义菜单选项
+type displayOption struct {
+	id          int
+	name        string
+	description string
+	handler     func(*App) error
+}
+
 // 系统相关常量
 var (
 	// hostsAPI 定义 API 地址

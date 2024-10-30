@@ -174,7 +174,7 @@ func main() {
 		fmt.Println("12. 🐙 访问项目主页")
 
 		fmt.Println("\n0.  退出程序")
-		fmt.Printf("\n请输入选项 (0-%d 或 q 退出): ", displayOption)
+		fmt.Printf("\n请输入选项 (0-12 或 q 退出): ")
 
 		// 读取用户输入
 		var input string
