@@ -17,27 +17,25 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.23.2"
-
-      - name: Initialize Go module
-        run: |
-          go mod init github-hosts
-          go mod tidy
+          go-version: "1.22" # Updated to latest stable version
 
       - name: Build binaries
+        working-directory: ./scripts # Change working directory to scripts
         run: |
           # Windows 版本
-          GOOS=windows GOARCH=amd64 go build -o github-hosts.windows-amd64.exe ./scripts
-          GOOS=windows GOARCH=386 go build -o github-hosts.windows-386.exe ./scripts
+          GOOS=windows GOARCH=amd64 go build -o ../github-hosts.windows-amd64.exe .
+          GOOS=windows GOARCH=386 go build -o ../github-hosts.windows-386.exe .
 
           # macOS 版本
-          GOOS=darwin GOARCH=amd64 go build -o github-hosts.darwin-amd64 ./scripts
-          GOOS=darwin GOARCH=arm64 go build -o github-hosts.darwin-arm64 ./scripts
+          GOOS=darwin GOARCH=amd64 go build -o ../github-hosts.darwin-amd64 .
+          GOOS=darwin GOARCH=arm64 go build -o ../github-hosts.darwin-arm64 .
 
           # Linux 版本
-          GOOS=linux GOARCH=amd64 go build -o github-hosts.linux-amd64 ./scripts
-          GOOS=linux GOARCH=386 go build -o github-hosts.linux-386 ./scripts
-          GOOS=linux GOARCH=arm64 go build -o github-hosts.linux-arm64 ./scripts
+          GOOS=linux GOARCH=amd64 go build -o ../github-hosts.linux-amd64 .
+          GOOS=linux GOARCH=386 go build -o ../github-hosts.linux-386 .
+          GOOS=linux GOARCH=arm64 go build -o ../github-hosts.linux-arm64 .
+
+          cd ..  # Return to root directory for zip operations
 
           # 创建 ZIP 包（包含二进制文件）
           zip -j github-hosts.windows-amd64.zip github-hosts.windows-amd64.exe
