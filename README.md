@@ -3,78 +3,67 @@
   <h1>github-host</h1>
 </div>
 
-
 GitHub 访问加速，解决 GitHub 访问慢的问题。使用 Cloudflare Workers 和公共 DNS API 来获取 IP 地址。
 
-## 使用方法
+## 快速开始
 
-### 方法一：直接使用 hosts 文件
+### Windows 用户
+在管理员权限的 PowerShell 中执行：
+```powershell
+irm https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/windows.ps1 | iex
+```
 
-1. 访问以下任一地址获取 hosts 内容：
-   - 主地址：[https://github-host.tinsfox.com/hosts](https://github-host.tinsfox.com/hosts)
+### MacOS/Linux 用户
+```bash
+curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/unix.sh | sudo bash
+```
+
+## 其他使用方法
+
+### 方法一：手动更新 hosts 文件
+
+1. 访问以下地址获取 hosts 内容：
+   - [https://github-host.tinsfox.com/hosts](https://github-host.tinsfox.com/hosts)
 
 2. 复制文件内容
 3. 替换本地 hosts 文件：
    - Windows：`C:\Windows\System32\drivers\etc\hosts`
    - MacOS/Linux：`/etc/hosts`
 4. 刷新 DNS 缓存：
-   - Windows：在命令提示符中运行 `ipconfig /flushdns`
-   - MacOS：在终端中运行 `sudo killall -HUP mDNSResponder`
-   - Linux：在终端中运行 `sudo systemd-resolve --flush-caches`
+   - Windows：`ipconfig /flushdns`
+   - MacOS：`sudo killall -HUP mDNSResponder`
+   - Linux：`sudo systemd-resolve --flush-caches`
 
-### 方法二：使用自动更新脚本
-
-Windows 用户：
-```batch
-@echo off
-curl -o hosts https://github-host.tinsfox.com/hosts
-copy /y hosts C:\Windows\System32\drivers\etc\hosts
-ipconfig /flushdns
-del hosts
-```
-
-MacOS/Linux 用户：
-```bash
-#!/bin/bash
-curl -o hosts https://github-host.tinsfox.com/hosts
-sudo cp hosts /etc/hosts
-# MacOS
-[ "$(uname)" == "Darwin" ] && sudo killall -HUP mDNSResponder
-# Linux
-[ "$(uname)" == "Linux" ] && sudo systemd-resolve --flush-caches
-rm hosts
-```
-
-### 方法三：使用 API 接口
-
-1. 获取所有 hosts：
-```bash
-curl https://github-host.tinsfox.com/hosts
-```
-
-2. 获取 JSON 格式数据：
-```bash
-curl https://github-host.tinsfox.com/hosts.json
-```
-
-3. 查询单个域名：
-```bash
-curl https://github-host.tinsfox.com/github.com
-```
-
-4. 刷新所有数据：
-```bash
-curl -X POST https://github-host.tinsfox.com/reset?key=xxxx
-```
-
-### 方法四：SwitchHosts 工具
+### 方法二：使用 SwitchHosts 工具
 
 1. 下载 [SwitchHosts](https://github.com/oldj/SwitchHosts) 工具
 2. 添加规则：
-   - 方案名：GitHub520
+   - 方案名：GitHub Hosts
    - 类型：远程
    - URL：`https://github-host.tinsfox.com/hosts`
    - 自动更新：1 小时
+
+## 常见问题
+
+1. **权限问题**
+   - Windows：需要以管理员身份运行 PowerShell 或命令提示符
+   - MacOS/Linux：需要 sudo 权限
+
+2. **定时任务未生效**
+   - Windows：检查任务计划程序中的 "GitHub Hosts Updater" 任务
+   - MacOS/Linux：使用 `crontab -l` 检查定时任务
+
+3. **更新失败**
+   - 检查日志文件（`~/.github-hosts/logs/update.log`）
+   - 确保网络连接正常
+   - 确保有足够的权限修改 hosts 文件
+
+4. **脚本下载失败**
+   - 如果无法访问 GitHub，可以使用以下备用地址：
+     ```bash
+     # jsDelivr CDN
+     curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-host@main/install.sh | sudo bash
+     ```
 
 ## 与原项目的区别
 
