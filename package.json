@@ -6,7 +6,7 @@
     "deploy": "wrangler deploy --minify",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "build": "bash scripts/build.sh"
+    "release": "bash scripts/build.sh"
   },
   "dependencies": {
     "hono": "^4.6.7"
