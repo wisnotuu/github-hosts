@@ -57,7 +57,24 @@ function setupEventListeners() {
   })
 }
 
+function updateBaseUrls() {
+  // 更新所有包含 ${baseUrl} 的元素
+  document.querySelectorAll('meta[property^="og:"]').forEach((meta) => {
+    const content = meta.getAttribute("content")
+    if (content && content.includes("${baseUrl}")) {
+      meta.setAttribute("content", content.replace("${baseUrl}", baseUrl))
+    }
+  })
+
+  // 更新 SwitchHosts URL
+  const switchHostsUrlElement = document.getElementById("switchHostsUrl")
+  if (switchHostsUrlElement) {
+    switchHostsUrlElement.textContent = `${baseUrl}/hosts`
+  }
+}
+
 window.addEventListener("load", () => {
+  updateBaseUrls()
   loadHosts()
   setupEventListeners()
 })

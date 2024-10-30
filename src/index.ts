@@ -11,14 +11,10 @@ import { Bindings } from "./types"
 const app = new Hono<{ Bindings: Bindings }>()
 
 app.get("/", async (c) => {
-  const baseUrl = c.req.url.replace(/\/$/, "")
-
-  const htmlTemplate = await c.env.ASSETS.get("index.html")
-  if (!htmlTemplate) {
+  const html = await c.env.ASSETS.get("index.html")
+  if (!html) {
     return c.text("Template not found", 404)
   }
-
-  const html = htmlTemplate.replace(/\${baseUrl}/g, baseUrl)
 
   return c.html(html)
 })
