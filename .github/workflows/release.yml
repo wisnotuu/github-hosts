@@ -25,17 +25,17 @@ jobs:
         working-directory: ./scripts
         run: |
           # Windows 版本
-          GOOS=windows GOARCH=amd64  go build -ldflags="-s -w -X main.Version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')" -o ../github-hosts.windows-amd64.exe .
-          GOOS=windows GOARCH=386  go build -ldflags="-s -w -X main.Version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')" -o ../github-hosts.windows-386.exe .
+          GOOS=windows GOARCH=amd64  go build -ldflags="-s -w -X main.Version=${GITHUB_REF_NAME}" -o ../github-hosts.windows-amd64.exe .
+          GOOS=windows GOARCH=386  go build -ldflags="-s -w -X main.Version=${GITHUB_REF_NAME}" -o ../github-hosts.windows-386.exe .
 
           # macOS 版本
-          GOOS=darwin GOARCH=amd64  go build -ldflags="-s -w -X main.Version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')" -o ../github-hosts.darwin-amd64 .
-          GOOS=darwin GOARCH=arm64  go build -ldflags="-s -w -X main.Version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')" -o ../github-hosts.darwin-arm64 .
+          GOOS=darwin GOARCH=amd64  go build -ldflags="-s -w -X main.Version=${GITHUB_REF_NAME}" -o ../github-hosts.darwin-amd64 .
+          GOOS=darwin GOARCH=arm64  go build -ldflags="-s -w -X main.Version=${GITHUB_REF_NAME}" -o ../github-hosts.darwin-arm64 .
 
           # Linux 版本
-          GOOS=linux GOARCH=amd64  go build -ldflags="-s -w -X main.Version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')" -o ../github-hosts.linux-amd64 .
-          GOOS=linux GOARCH=386  go build -ldflags="-s -w -X main.Version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')" -o ../github-hosts.linux-386 .
-          GOOS=linux GOARCH=arm64  go build -ldflags="-s -w -X main.Version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')" -o ../github-hosts.linux-arm64 .
+          GOOS=linux GOARCH=amd64  go build -ldflags="-s -w -X main.Version=${GITHUB_REF_NAME}" -o ../github-hosts.linux-amd64 .
+          GOOS=linux GOARCH=386  go build -ldflags="-s -w -X main.Version=${GITHUB_REF_NAME}" -o ../github-hosts.linux-386 .
+          GOOS=linux GOARCH=arm64  go build -ldflags="-s -w -X main.Version=${GITHUB_REF_NAME}" -o ../github-hosts.linux-arm64 .
 
           cd ..  # Return to root directory for zip operations
 
@@ -49,7 +49,7 @@ jobs:
           zip -j github-hosts.linux-arm64.zip github-hosts.linux-arm64
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             github-hosts.windows-amd64.exe
