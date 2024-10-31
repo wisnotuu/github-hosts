@@ -320,3 +320,44 @@ pre code {
   padding: 1em;
   overflow-x: auto;
 }
+
+.hosts-container {
+  position: relative;
+  margin: 1rem 0;
+  background: #f6f8fa;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.hosts-container .copy-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--text-secondary);
+  color: white;
+  border: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.hosts-container .copy-btn:hover {
+  background-color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+#hosts {
+  margin: 0;
+  padding: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: auto;
+}

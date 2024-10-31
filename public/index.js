@@ -25,6 +25,9 @@ async function copyToClipboard(btn) {
 
 async function loadHosts() {
   const hostsElement = document.getElementById("hosts")
+  // 如果元素不存在，直接返回
+  if (!hostsElement) return
+
   try {
     const response = await fetch(`${baseUrl}/hosts`)
     if (!response.ok) throw new Error("Failed to load hosts")
@@ -57,7 +60,8 @@ function setupEventListeners() {
   })
 }
 
-window.addEventListener("load", () => {
+// 确保 DOM 完全加载后再执行
+document.addEventListener("DOMContentLoaded", () => {
   loadHosts()
   setupEventListeners()
 })
