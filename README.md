@@ -17,25 +17,26 @@
 
 ### 1. 命令行工具（推荐）
 
+#### MacOS 用户
+```bash
+sudo curl -fsSL https://github.com/TinsFox/github-hosts/releases/download/v0.0.1/github-hosts.darwin-arm64 -o github-hosts && sudo chmod +x ./github-hosts && ./github-hosts
+```
+
+> [!IMPORTANT]
+> Windows 与 Linux 的脚本还没有经过测试，遇到问题请提 issue
+
 #### Windows 用户
 在管理员权限的 PowerShell 中执行：
 ```powershell
-irm https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.windows-amd64.exe | iex
-```
-
-#### MacOS 用户
-```bash
-# Apple Silicon (ARM64)
-sudo curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.darwin-arm64 -o /usr/local/bin/github-hosts && sudo chmod +x /usr/local/bin/github-hosts && github-hosts
+irm https://github.com/TinsFox/github-hosts/releases/download/v0.0.1/github-hosts.windows-amd64.exe | iex
 ```
 
 #### Linux 用户
 ```bash
-# AMD64 架构
-sudo curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.linux-amd64 -o /usr/local/bin/github-hosts && sudo chmod +x /usr/local/bin/github-hosts && github-hosts
+sudo curl -fsSL https://github.com/TinsFox/github-hosts/releases/download/v0.0.1/github-hosts.linux-amd64 -o github-hosts && sudo chmod +x ./github-hosts && ./github-hosts
 ```
 
-> 📝 更多架构版本请查看[下载说明](#下载说明)
+> 更多版本请查看 [Release 页面](https://github.com/TinsFox/github-hosts/releases)
 
 ### 2. SwitchHosts 工具
 
@@ -56,16 +57,6 @@ sudo curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-h
    - Windows：`ipconfig /flushdns`
    - MacOS：`sudo killall -HUP mDNSResponder`
    - Linux：`sudo systemd-resolve --flush-caches`
-
-## 下载说明
-
-### 预编译二进制文件
-
-从 [Release 页面](https://github.com/TinsFox/github-hosts/releases/tag/v1.0.6) 下载：
-
-- Windows: [AMD64](https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.windows-amd64.exe) | [386](https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.windows-386.exe)
-- MacOS: [ARM64](https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.darwin-arm64) | [AMD64](https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.darwin-amd64)
-- Linux: [AMD64](https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.linux-amd64) | [ARM64](https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.linux-arm64) | [386](https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-hosts.linux-386)
 
 ## API 文档
 
@@ -94,9 +85,9 @@ sudo curl -fsSL https://cdn.jsdelivr.net/gh/TinsFox/github-hosts@v1.0.6/github-h
 2. 创建 Cloudflare Workers 账号
 3. 安装并部署：
 ```bash
-npm install
-npm run dev    # 本地开发
-npm run deploy # 部署到 Cloudflare
+pnpm install
+pnpm run dev    # 本地开发
+pnpm run deploy # 部署到 Cloudflare
 ```
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/TinsFox/github-hosts)
