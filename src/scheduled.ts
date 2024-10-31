@@ -1,5 +1,5 @@
 import { Bindings } from "./types"
-import { getHostsData } from "./services/hosts"
+import { fetchLatestHostsData, storeData } from "./services/hosts"
 
 export async function handleSchedule(
   event: ScheduledEvent,
@@ -8,8 +8,8 @@ export async function handleSchedule(
   console.log("Running scheduled task...")
 
   try {
-    // 获取最新的 hosts 数据
-    await getHostsData(env)
+    const newEntries = await fetchLatestHostsData()
+    await storeData(env, newEntries)
 
     console.log("Scheduled task completed successfully")
   } catch (error) {
